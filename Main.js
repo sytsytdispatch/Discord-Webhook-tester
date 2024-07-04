@@ -1,5 +1,4 @@
-//coded by sytsytdispatch
-//dont skid pls
+
 //this is for testing purposes only
 //do not use this for malicious purpose, we do not condome that
 //this is for testing discord anti-spam bots for discord
