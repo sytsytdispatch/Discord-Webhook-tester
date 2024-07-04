@@ -10,10 +10,10 @@ function createModal() {
   const modal = document.createElement('div');
   modal.style.cssText = `
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
+    top: 50px; /* Changed to top 50px for top-left corner */
+    left: 50px; /* Changed to left 50px for top-left corner */
+    width: 300px; /* Adjusted the width for smaller size */
+    height: auto; /* Auto height for vertical adjustment */
     background-color: #87ceeb; /* Sky blue */
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -29,12 +29,11 @@ function createModal() {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    cursor: move; /* Make header draggable */
   `;
 
   const title = document.createElement('div');
   title.textContent = 'WTF! Cheats (drag from the top)';
-  title.style.fontSize = '20px';
+  title.style.fontSize = '16px'; /* Adjusted the font size */
   title.style.color = '#fff'; // Text color for the title
 
   const closeButton = document.createElement('span');
@@ -50,6 +49,12 @@ function createModal() {
   modal.appendChild(header);
 
   const content = document.createElement('div');
+  content.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content vertically */
+  `;
+
   const webhookInput = createInput('text', 'Enter your Discord webhook URL');
   const messageInput = createTextarea('Enter your message');
   const speedInput = createInput('number', 'Messages per second (max 100)');
@@ -65,7 +70,7 @@ function createModal() {
     border-radius: 4px;
     margin-top: 10px;
   `;
-  
+
   let intervalId = null; // Track the interval ID for sending messages
   let sendingMessages = false; // Track if messages are currently being sent
 
@@ -90,7 +95,7 @@ function createModal() {
         sendingMessages = true;
         sendButton.textContent = 'End'; // Change button text to 'End'
         sendButton.style.backgroundColor = '#dc3545'; // Change background color to red
-        
+
         intervalId = setInterval(async () => {
           const requestOptions = {
             method: 'POST',
@@ -106,7 +111,7 @@ function createModal() {
           }
           console.log('Message sent to Discord:', message);
         }, 1000 / messagesPerSecond);
-        
+
         alert(`Messages started sending at ${messagesPerSecond} messages per second!`);
       } catch (error) {
         console.error('Error sending messages to Discord:', error);
@@ -131,6 +136,28 @@ function createModal() {
   content.appendChild(speedInput);
   content.appendChild(sendButton);
   modal.appendChild(content);
+
+  const buttonsContainer = document.createElement('div');
+  buttonsContainer.style.cssText = `
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  `;
+
+  const discordButton = createImageButton(
+    'https://cdn.discordapp.com/attachments/1257026628916215840/1258223757902741574/discord-logo-icon-editorial-free-vector.png?ex=668743b0&is=6685f230&hm=cb953f291746e4daea36b6e3a2abca465a38d97e2fa15b8346a8982456c03132&',
+    'https://discord.gg/kg5kCTqVYQ'
+  );
+  const githubButton = createImageButton(
+    'https://cdn.discordapp.com/attachments/1257026628916215840/1258223808209358879/images.png?ex=668743bc&is=6685f23c&hm=bd0c604e018147e1c7f23d8a25087b41809ba2aa77078f230f5eda49b7e3716e&',
+    'https://github.com/sytsytdispatch'
+  );
+
+  buttonsContainer.appendChild(discordButton);
+  buttonsContainer.appendChild(githubButton);
+  modal.appendChild(buttonsContainer);
 
   document.body.appendChild(modal);
 
@@ -166,6 +193,24 @@ function createModal() {
     return textarea;
   }
 
+  // Function to create image button
+  function createImageButton(imageSrc, linkUrl) {
+    const link = document.createElement('a');
+    link.href = linkUrl;
+    link.target = '_blank';
+
+    const image = document.createElement('img');
+    image.src = imageSrc;
+    image.style.cssText = `
+      width: 30px;
+      height: 30px;
+      margin-left: 5px;
+    `;
+
+    link.appendChild(image);
+    return link;
+  }
+
   // Make the modal draggable
   let isDragging = false;
   let modalX, modalY, mouseX, mouseY;
@@ -173,14 +218,12 @@ function createModal() {
   modal.addEventListener('mousedown', startDrag);
 
   function startDrag(e) {
-    if (e.target === header || e.target === title || e.target === closeButton) {
+    if (e.target !== webhookInput && e.target !== messageInput && e.target !== speedInput && e.target !== sendButton && e.target.tagName !== 'IMG') {
       isDragging = true;
       modalX = modal.offsetLeft - e.clientX;
       modalY = modal.offsetTop - e.clientY;
       document.addEventListener('mousemove', dragModal);
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
+      document.addEventListener('mouseup', stopDrag);
     }
   }
 
@@ -189,6 +232,11 @@ function createModal() {
       modal.style.left = e.clientX + modalX + 'px';
       modal.style.top = e.clientY + modalY + 'px';
     }
+  }
+
+  function stopDrag() {
+    isDragging = false;
+    document.removeEventListener('mousemove', dragModal);
   }
 }
 
