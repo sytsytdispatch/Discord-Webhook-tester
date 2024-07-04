@@ -32,7 +32,7 @@ function createModal() {
   `;
 
   const title = document.createElement('div');
-  title.textContent = 'WTF! Cheats (made by sytsytdispatch)';
+  title.textContent = 'WTF! Cheats (Discord webhook spammer!)';
   title.style.fontSize = '16px'; /* Adjusted the font size */
   title.style.color = '#fff'; // Text color for the title
 
