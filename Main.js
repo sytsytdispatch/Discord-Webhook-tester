@@ -32,14 +32,17 @@ function createModal() {
   `;
 
   const title = document.createElement('div');
-  title.textContent = 'WTF! Cheats (drag from the top)';
+  title.textContent = 'WTF! Cheats (made by sytsytdispatch)';
   title.style.fontSize = '16px'; /* Adjusted the font size */
   title.style.color = '#fff'; // Text color for the title
 
   const closeButton = document.createElement('span');
   closeButton.textContent = '✖';
-  closeButton.style.cursor = 'pointer';
-  closeButton.style.color = '#fff'; // Color for close button text
+  closeButton.style.cssText = `
+    cursor: pointer;
+    color: #ff0000; /* Red color for close button text */
+    font-size: 24px; /* Larger font size for the close button */
+  `;
   closeButton.addEventListener('click', () => {
     document.body.removeChild(modal);
   });
@@ -242,4 +245,3 @@ function createModal() {
 
 // Call the function to create the modal
 createModal();
-
